@@ -20,7 +20,7 @@
       transitionSpeed: 1000,
       //   autoplay: 2000, 
       showCounter: false,
-      carousel: false,
+      carousel: true,
       thumbnails: false,
       thumbFit: false,
       thumbMargin: 0,
