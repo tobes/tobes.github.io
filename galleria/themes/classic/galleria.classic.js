@@ -54,6 +54,9 @@
         this.addIdleState(this.get('counter'), {
           opacity: 0
         });
+      } else {
+        $('.galleria-image-nav-right').hide();
+        $('.galleria-image-nav-left').hide();
       }
 
       // toggle info
