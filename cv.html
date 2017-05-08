@@ -1,0 +1,168 @@
+<html>
+  <head>
+<style>
+textarea, input[type=text]{
+  width:80%;
+}
+</style>
+  </head>
+  <body>
+    <div id="selectors"></div>
+    <button id="output_text">Output</button>
+    <ul id="output"></ul>
+    <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+  <script>
+
+  function init(){
+    var key;
+    $('#selectors').on('click', 'button', button);
+    $('#selectors').on('click', 'input', input);
+    $('#selectors').on('click', 'span.opener', opener);
+    for (var i=0, len=localStorage.length; i<len; ++i) {
+      key = localStorage.key(i);
+      $('#selectors').append(buildItem(key));
+    }
+    $('#selectors').append(buildItem());
+    $('#output_text').on('click', copyToClipboard);
+  }
+
+  function generateUUID () { // Public Domain/MIT
+    var d = new Date().getTime();
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+        d += performance.now(); //use high-precision timer if available
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+}
+
+  function copyToClipboard() {
+    var out = [];
+    $('#output li').each( function () {
+      out.push($(this).find('textarea').val());
+    });
+    var text = out.join('\n\n');
+    output = $('<textarea>').val(text)
+    $('body').append(output);
+    output.select()
+    document.execCommand('copy')
+    output.remove()
+  }
+
+  function opener() {
+    var $x = $(this);
+    var $info = $x.parent().parent().find('div.info');
+    if ($info.is(":visible")){
+      $info.hide();
+    } else {
+      $info.show();
+    }
+  }
+
+
+  function update($x){
+    key = $x.prop('id').substr(4);
+    if ($x.prop('checked')){
+      item = $('<textarea>');
+      item.val($('#desc_' + key).val());
+      item.prop('id', 'out_text_' + key);
+      var li = $('<li>');
+      li.prop('id', 'out_' + key);
+      li.append(item)
+      $('#output').append(li);
+    } else {
+      $('#out_' + key).remove();
+    }
+    $('#output').sortable({axis: "y"});
+  }
+
+  function input(e){
+    var id = this.id;
+    if (id.startsWith('chk_')){
+      var $x = $(this);
+      setTimeout(function() {
+        $x.prop('checked', !($x.prop('checked')))
+        update($x);
+      }, 10)
+
+    }
+    return false;
+  }
+
+  function button(){
+    var id = this.id;
+    var key;
+    if (id.startsWith('but_save_')) {
+      key = id.substr(9);
+      var name = $('#key_' + key).val();
+      var value = $('#desc_' + key).val();
+      if (!key) {
+        $('#selectors').append(buildItem());
+        key = generateUUID();
+      }
+      var data = {
+        title: name,
+        text: value
+      };
+      localStorage.setItem(key, JSON.stringify(data));
+      var oldKey = id.substr(9);
+      if (!oldKey) {
+        $('#div_').replaceWith(buildItem(key))
+      }
+    }
+    if (id.startsWith('but_del_')) {
+      if (confirm('delete?')){
+        key = id.substr(8);
+        localStorage.removeItem(key);
+        $('#div_'+ key).remove();
+      }
+    }
+  }
+
+  function buildItem(key){
+    var value;
+    var data;
+    if (key){
+      try {
+        data = JSON.parse(localStorage.getItem(key));
+      } catch (e) {
+        localStorage.removeItem(key);
+      }
+      console.log(data);
+    }
+    key = key || '';
+    data = data || {};
+
+    out = [];
+    out.push('<div id="div_' + key + '">');
+    out.push('<div>');
+    out.push('<span class="opener">X</span>');
+    out.push('<input id="chk_' + key + '" type="checkbox">');
+    out.push('<input id="key_' + key + '" type="text">');
+    out.push('</div>');
+    out.push('<div class="info">');
+    out.push('<textarea id="desc_' + key + '">');
+    out.push('</textarea>');
+    out.push('<br>');
+    out.push('<button id="but_save_' + key + '" >');
+    out.push('save');
+    out.push('</button>');
+    out.push('<button id="but_del_' + key + '" >');
+    out.push('delete');
+    out.push('</button>');
+    out.push('</div>');
+    out.push('</div>');
+    item = $(out.join(''));
+    item.find('div.info').hide();
+    item.find('textarea').val(data.text || '');
+    item.find('input[type=text]').val(data.title || '');
+    return item;
+  }
+  $(init);
+
+  </script>
+  </body>
+</html>
