@@ -7,8 +7,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
   <style>
+body, html {
+  margin: 0;
+  padding: 0;
+}
 
 .hidden {display:none;}
+
+
+#question {
+  background-color: lightcyan;
+  padding:1em 2em;
+  margin:0;
+}
 ul {
   list-style-type: none;
   margin: 0;
@@ -16,7 +27,7 @@ ul {
 }
 
 li.answer {
-  background-color:lightblue;
+  background-color:powderblue;
   padding:1em;
   margin:0.25em;
   border: 2px solid white;
@@ -39,7 +50,6 @@ li.bad {
 </head>
 
 <body>
-  <h1>French</h1>
   <div id="main"></div>
   <script>
 var verbs = [
@@ -73,6 +83,69 @@ var verbs = [
   ['etre', 'be'],
   ['dire', 'say'],
   ['faire', 'do/make'],
+  ['pouvoir', 'be able'],
+  ['préparer', 'prepare'],
+  ['habiter', 'live'],
+  ['travailler', 'work'],
+  ['parler', 'speak'],
+  ['pratiquer', 'practice'],
+  ['regarder', 'watch'],
+  ['écouter', 'listen'],
+  ['finir', 'finish'],
+  ['garantir', 'guarantee'],
+  ['choisir', 'choose'],
+  ['grossir', 'put on weight'],
+  ['maigrir', 'lose weight'],
+  ['remplir', 'fill'],
+  ['réussir', 'succeed'],
+  ['manger', 'eat'],
+  ['recontrer', 'meet'],
+  ['saisir', 'seize'],
+  ['téléphoner', 'telephone'],
+  ['réserver', 'reserve'],
+  ['importer', 'import'],
+  ['exporter', 'export'],
+  ['voter', 'vote'],
+  ['inviter', 'invite'],
+  ['monter', 'bring up/take up'],
+  ['acheter', 'buy'],
+  ['penser', 'think'],
+  ['raccourcir', 'shorten'],
+  ['copier', 'copy'],
+  ['dépenser', 'spend (money)'],
+  ['passer', 'spend (time)'],
+  ['traverser', 'cross'],
+  ['attacher', 'fastern/attach'],
+  ['arriver', 'arrive'],
+  ['partir', 'leave', 'irreg'],
+  ['visiter', 'visit'],
+  ['trouver', 'find'],
+  ['consulter', 'consult'],
+  ['dépondre de', 'depend on'],
+  ['défendre', 'defend/forbid'],
+  ['prendre', 'take'],
+  ['comprendre', 'understand'],
+  ['apprendre', 'learn'],
+  ['surprendre', 'suprise'],
+  ['mettre', 'put'],
+  ['permettre', 'permit'],
+  ['permettre de', 'permit to'],
+  ['promettre', 'promise'],
+  ['promettre de', 'promise to'],
+  ['soumettre', 'submit'],
+  ['rentrer', 'return'],
+  ['mettre en marche', 'start/set going'],
+  ['brancher', 'plug in'],
+  ['répéter', 'repeat'],
+  ['utiliser', 'use'],
+  ['lire', 'read', 'irreg'],
+  ['aller', 'go', 'irreg'],
+  ['venir', 'come', 'irreg'],
+  ['venvoyer', 'send', 'irreg'],
+  ['régler', 'settle'],
+  ['tourner', 'turn'],
+  ['recommander', 'recommend'],
+  // chap 6 end
 ];
 
 
@@ -85,7 +158,7 @@ function main() {
 
 function displayQuestion(phrase){
   $('#main').empty().unbind().removeClass('good bad');
-    item = $('<p>')
+    item = $('<p id="question">')
     item.text(phrase.question)
     $('#main').append(item)
     item = $('<p id="answer" class="hidden">')
