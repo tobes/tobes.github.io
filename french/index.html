@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+  <style>
+
+.hidden {display:none;}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 1em;
+}
+
+li.answer {
+  background-color:lightblue;
+  padding:1em;
+  margin:0.25em;
+  border: 2px solid white;
+}
+
+li.good {
+  background-color:lightgreen;
+}
+li.bad {
+  background-color:red;
+}
+#main.good {
+  background-color:lightgreen;
+}
+#main.bad {
+  background-color:red;
+}
+  </style>
+
+</head>
+
+<body>
+  <h1>French</h1>
+  <div id="main"></div>
+  <script>
+var verbs = [
+
+  ['apprêter', 'ready'],
+  ['essuyer', 'wipe'],
+  ['écraser', 'crush'],
+  ['abandonner', 'abandon'],
+  ['oublier', 'forget'],
+  ['paraître', 'appear/seem'],
+  ['rappeler', 'recall'],
+  ['démunir', 'deprive'],
+  ['amener', 'bring'],
+  ['apporter', 'bring'],
+  ['repérer', 'repair'],
+  ['rompre', 'break'],
+  ['interrompter', 'interupt'],
+  ['montre', 'show'],
+  ['présenter', 'present'],
+  ['regretter', 'regret/miss/repent'],
+  ['entraîner', 'practice/cause'],
+  ['suffire', 'suffer'],
+  ['tenir', 'hold'],
+  ['récupérer', 'recuperate'],
+  ['préfèrer', 'prefer'],
+  ['sangloter', 'sob'],
+  ['assommer', 'knock out'],
+  ['siffler', 'whistle'],
+  ['mentir', 'lie'],
+  ['avoir', 'have'],
+  ['etre', 'be'],
+  ['dire', 'say'],
+  ['faire', 'do/make'],
+];
+
+
+function main() {
+
+  phrase = randSelect(verbs, 6);
+  displayQuestion(phrase);
+
+}
+
+function displayQuestion(phrase){
+  $('#main').empty().unbind().removeClass('good bad');
+    item = $('<p>')
+    item.text(phrase.question)
+    $('#main').append(item)
+    item = $('<p id="answer" class="hidden">')
+    item.text(phrase.answer)
+    $('#main').append(item)
+    item = $('<ul>')
+    $('#main').append(item)
+    for (i=0; i<phrase.options.length; i++){
+    subitem = $('<li class="answer">')
+    subitem.click(checkAnswer);
+    subitem.text(phrase.options[i]);
+    item.append(subitem)
+    }
+    $('#main').append(item)
+
+}
+
+function checkAnswer(e) {
+  var given = $(this).text();
+  var answer = $("#answer").text();
+  $('#main').removeClass('good bad')
+  $('li').removeClass('good bad').unbind();
+  if (answer == given){
+    $('#main').addClass('good')
+    $(this).addClass('good')
+    window.setTimeout(main, 500);
+  } else {
+    $('#main').addClass('bad').click(main);
+    $(this).addClass('bad')
+    $('li').each( function () {
+      if ($(this).text() == answer){
+        $(this).addClass('good')
+      }
+    }
+    )
+  }
+  e.stopPropagation();
+}
+
+function shuffle(array) {
+  var m = array.length, t, i;
+
+  // While there remain elements to shuffle…
+  while (m) {
+
+    // Pick a remaining element…
+    i = Math.floor(Math.random() * m--);
+
+    // And swap it with the current element.
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
+  }
+
+  return array;
+}
+function randInt(max){
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+function randSelect(list, choices){
+  var item = list[randInt(list.length)];
+  var question = item[0];
+  var answer = item[1];
+  var options = [answer];
+  while (options.length < choices){
+    item = list[randInt(list.length)];
+    var value = item[1];
+    if (!options.includes(value)){
+      options.push(value);
+    }
+  }
+  return {
+    question: question,
+    answer: answer,
+    options: shuffle(options),
+  }
+}
+
+$(main());
+  </script>
+</body>
+
+</html>
